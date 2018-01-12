@@ -1,0 +1,58 @@
+version: '3.2'
+
+networks: 
+  back-tier:
+    driver: bridge
+  front-tier:
+    driver: bridge
+
+
+services:
+
+  nginx: 
+    build:
+      context: ./docker/nginx
+      dockerfile: nginx.dockerfile 
+    restart: always    
+    depends_on: 
+      - php_fpm
+    working_dir: /var/www   
+    volumes:
+      - type: bind
+        name: static
+        source: './public/dist'
+        target: '/var/www/static' 
+    ports:
+      - "8081:80"
+    networks: 
+      - back-tier
+      - front-tier
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "1"  
+
+  php_fpm:
+    build:
+      context: ./docker/php
+      dockerfile: app.dockerfile
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - type: bind
+        name: app
+        source: './'
+        target: /var/www  
+    networks:
+      - back-tier
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "1" 
+
+volumes:
+  app:
+  static:
+         

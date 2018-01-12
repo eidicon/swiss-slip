@@ -1,0 +1,18 @@
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+.idea/
+.vscode/
+
+###> node ###
+node_modules/
+npm-debug.log
+###< node ###
+
+
+/public/dist/*
+!/public/dist
